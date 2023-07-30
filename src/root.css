@@ -1,0 +1,14 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+:root {
+    --dark: #181818;
+    --lightDark: #1f1f1f;
+    --white: #f2f3f4;
+}
+
+#root {
+    display: flex;
+}
