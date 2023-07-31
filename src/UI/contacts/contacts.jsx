@@ -1,16 +1,32 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import style from './contacts.module.scss'
-
+import User from './User/user'
+import Header from './header/header'
 const Contacts = () => {
-    const input = useRef()
-    useEffect(() => {
-        console.log(input);
-    }, [])
+    const [active, setActive] = useState(false)
+    const contactsClass = style.contacts + ( active ? " " + style.close : "")
+    const openClose = () => {
+        setActive(current => !current);
+        console.log(contactsClass);
+        
+    }
+
     return (
-        <div className={style.contacts}>
-            <header>
-                <span>контакты</span> <div className={style.search}><img src="./search.svg" alt="" /><input type="text" ref={input}/></div>
-            </header>
+        <div className={contactsClass}>
+            <Header isClose={active} eventCloseOpen={openClose} />
+            <div className={style.users_list}>
+                <User />
+                <User />
+                <User />
+                <User />
+                <User />
+                <User />
+                <User />
+                <User />
+                <User />
+                <User />
+                <User />
+            </div>
         </div>
     )
 }

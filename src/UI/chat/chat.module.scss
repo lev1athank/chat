@@ -1,5 +1,15 @@
-.chat {
+.chat_zone {
     width: 100%;
     height: 100vh;
     background-color: var(--lightDark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .chat {
+        width: 60%;
+        height: 96vh;
+        background-color: var(--dark);
+        border-radius: 45px;
+    }
 }
