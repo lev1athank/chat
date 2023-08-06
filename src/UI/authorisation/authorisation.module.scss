@@ -1,0 +1,147 @@
+.conteiner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--lightDark);
+
+    form {
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: var(--dark);
+        border-radius: 15px;
+        padding: 30px;
+        gap: 20px;
+
+        .title {
+            font-size: 1.5rem;
+            color: var(--white);
+        }
+
+        input {
+            width: 250px;
+            height: 50px;
+            background-color: var(--lightDark);
+            border: none;
+            outline: none;
+            border-radius: 15px;
+            padding: 15px;
+            color: var(--white);
+            font-size: 1rem;
+            transition: all 0.1s cubic-bezier(0.39, 0.575, 0.565, 1);
+
+            &:focus {
+                box-shadow: none;
+                transform: scale(1.05);
+            }
+
+            &:active {
+                box-shadow: none;
+            }
+
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+
+        .imgLoad {
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            border-radius: 15px;
+            padding: 15px;
+            background-color: var(--lightDark);
+
+            .imgLoadTitle {
+                font-size: 0.9rem;
+                color: var(--white);
+
+                &>span {
+                    color: var(--gray);
+                }
+            }
+
+            .inputImg {
+                display: flex;
+                align-items: center;
+                outline: none;
+                height: 80px;
+                border-radius: 15px;
+                background-color: var(--dark);
+                color: transparent;
+
+                &::file-selector-button {
+                    background-color: var(--dark);
+                    width: 80px;
+                    height: 80px;
+                    border: none;
+                    color: transparent;
+                    background: url("/image.svg");
+                    background-repeat: no-repeat;
+                    background-position: 0 -20%;
+                    background-size: 70% 70%;
+                }
+
+                
+                &::before {
+                    content: 'Загрущить';
+                    position: absolute;
+                    left: 90px;
+                    top: 40%;
+                    font-size: 1rem;
+                    color: var(--white);
+                }
+
+
+
+
+
+            }
+
+            svg {
+                position: absolute;
+                top: 0;
+                left: 0;
+                
+                path {
+                    fill: var(--white);
+                }
+            }
+
+
+        }
+
+        .createBtn {
+            border-radius: 15px;
+            border: none;
+            width: 260px;
+            height: 50px;
+            font-size: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.39, 0.575, 0.565, 1);
+
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+
+        .navigator {
+            width: 260px;
+            height: 100px;
+
+            .entry {
+                color: var(--white);
+                font-size: 1rem;
+
+                &>span {
+                    color: #068FFF;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
