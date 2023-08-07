@@ -1,16 +1,48 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import style from './authorisation.module.scss'
 
 
 
 const Authorisation = (prop) => {
-	const [state, setstate] = useState(0)
+	const [paramRequest, setParamRequest] = useState({"id":0})
+	
+	const form = useRef()
+	
+	const nameParam = {
+		0: ['first_name', 'last_name', 'password'],
+		1: ['image', 'nikName'],
+		2: ['nikName', 'password']
+	}
+
+	const setParam = (index, el) => {
+		setParamRequest({
+			"id": index + 1,
+			...el
+		})
+	}
+
+	const getParam = (index) => {
+		let a = {}
+		nameParam[index].forEach(el => {
+			console.log(el.current.type);
+			if (el.current.type == 'file')
+				a[el] = form.current[el].files[0]
+			else 
+				a[el] = form.current[el].value
+		});
+
+
+
+		setParam(index, a)
+	}
+
+	console.log(paramRequest);
 
 	return (
 		<div className={style.conteiner}>
-			<form action="">
+			<form method='post' ref={form}>
 				{
-					state == 0 ? <AuthorisationLVL0 btnState={setstate} /> : state == 1 ? <AuthorisationLVL1 btnState={setstate} entry={prop.isLogFun} /> : <Entry entry={prop.isLogFun} /> 
+					paramRequest.id == 0 ? <AuthorisationLVL0 btnState={getParam} refForm={form} /> : paramRequest.id == 1 ? <AuthorisationLVL1 btnState={getParam} entry={prop.isLogFun} /> : <Entry entry={prop.isLogFun} />
 				}
 			</form>
 		</div>
@@ -19,29 +51,45 @@ const Authorisation = (prop) => {
 
 
 const AuthorisationLVL0 = (prop) => {
+
+
+
 	return (
 		<>
 			<span className={style.title}>Регистрация</span>
-			<input className={style.first_name} type="text" placeholder='Имя' />
-			<input className={style.last_name} type="text" placeholder='Фамилия' />
-			<input className={style.last_name} type="password" placeholder='Пароль' />
-			<button onClick={()=>prop.btnState(1)} className={style.createBtn}>Создать</button>
+			<input type="text" placeholder='Имя' name='first_name' required/>
+			<input type="text" placeholder='Фамилия (необязательно)' name='last_name' />
+			<input type="password" placeholder='Пароль' name='password' required/>
+			<button onClick={() => prop.btnState(0)} className={style.createBtn}>Создать</button>
 			<div className={style.navigator}>
-				<span className={style.entry}>если есть аккаунт <span onClick={()=>prop.btnState(3)} >войти</span> </span>
+				<span className={style.entry}>если есть аккаунт <span onClick={() => prop.btnState(2)} >войти</span> </span>
 			</div>
 		</>
 	)
 }
+
+function getMeta(imgDrop){
+	let url = window.URL.createObjectURL(imgDrop.target.files[0])
+	let img = document.createElement('img')
+	img.src = url
+	console.log(img);
+	console.log(img.naturalWidth);
+   }
+
 const AuthorisationLVL1 = (prop) => {
+
+
 	return (
 		<>
 			<span className={style.title}>Создания профиля</span>
 			<div className={style.imgLoad}>
 				<span className={style.imgLoadTitle}>Фото профиля <span>(необезательно)</span></span>
-				<input className={style.inputImg} name="image_uploads" type="file" accept="image/*"  />
+				<div className={style.imgLoadZone}>
+					<input className={style.inputImg} onChange={(val) => getMeta(val)} name="image" type="file" accept="image/*" />
+				</div>
 			</div>
-			<input className={style.nameProf} type="text" placeholder='Имя профиля' />
-			<button className={style.createBtn} onClick={()=>prop.entry(true)} >Продолжить</button>
+			<input className={style.nameProf} type="text" placeholder='Имя профиля' name='nikName' required/>
+			<button className={style.createBtn} onClick={() => prop.btnState(1)} >Продолжить</button>
 		</>
 	)
 }
@@ -51,9 +99,9 @@ const Entry = (prop) => {
 	return (
 		<>
 			<span className={style.title}>Вход</span>
-			<input className={style.nameProf} type="text" placeholder='Имя профиля' />
-			<input className={style.last_name} type="password" placeholder='Пароль' />
-			<button className={style.createBtn} onClick={()=>prop.entry(true)} >Войти</button>
+			<input className={style.nameProf} type="text" placeholder='Имя профиля' name='nikName' required/>
+			<input type="password" placeholder='Пароль' name='password'/>
+			<button className={style.createBtn} onClick={() => prop.btnState(2)} >Войти</button>
 		</>
 	)
 }
