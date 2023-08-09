@@ -6,104 +6,153 @@
     height: 100vh;
     background-color: var(--lightDark);
 
-    form {
-
-        display: flex;
+    .authorisationConteiner {
+        display: inline-flex;
         flex-direction: column;
         align-items: center;
+        gap: 20px;
         background-color: var(--dark);
         border-radius: 15px;
         padding: 30px;
-        gap: 20px;
 
-        .title {
-            font-size: 1.5rem;
-            color: var(--white);
-        }
+        form {
 
-        input {
-            width: 250px;
-            height: 50px;
-            background-color: var(--lightDark);
-            border: none;
-            outline: none;
-            border-radius: 15px;
-            padding: 15px;
-            color: var(--white);
-            font-size: 1rem;
-            transition: all 0.1s cubic-bezier(0.39, 0.575, 0.565, 1);
-
-            &:focus {
-                box-shadow: none;
-                transform: scale(1.05);
-            }
-
-            &:active {
-                box-shadow: none;
-            }
-
-            &:hover {
-                transform: scale(1.05);
-            }
-        }
-
-        .imgLoad {
-            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-            border-radius: 15px;
-            padding: 15px;
-            background-color: var(--lightDark);
+            gap: 20px;
 
-            .imgLoadTitle {
-                font-size: 0.9rem;
+            .title {
+                font-size: 1.5rem;
                 color: var(--white);
+            }
 
-                &>span {
-                    color: var(--gray);
+            input {
+                width: 260px;
+                height: 50px;
+                background-color: var(--lightDark);
+                border: none;
+                outline: none;
+                border-radius: 15px;
+                padding: 15px;
+                color: var(--white);
+                font-size: 1rem;
+                transition: all 0.1s cubic-bezier(0.39, 0.575, 0.565, 1);
+
+                &:focus {
+                    box-shadow: none;
+                    transform: scale(1.05);
+                }
+
+                &:active {
+                    box-shadow: none;
+                }
+
+                &:hover {
+                    transform: scale(1.05);
                 }
             }
 
-            .imgLoadZone {
+            .imgLoad {
+                position: relative;
                 display: flex;
+                flex-direction: column;
                 align-items: center;
-                justify-content: center;
-                width: 85px;
-                .inputImg {
-                    display: flex;
-                    outline: none;
-                    height: 80px;
-                    border-radius: 15px;
-                    background-color: var(--dark);
-                    color: transparent;
-                    font-size: 0px;
+                gap: 10px;
+                border-radius: 15px;
+                padding: 15px;
+                background-color: var(--lightDark);
 
-                    &::file-selector-button {
-                        background-color: var(--dark);
-                        width: 80px;
-                        height: 80px;
-                        border: none;
-                        color: transparent;
-                        background: url("/image.svg");
-                        background-repeat: no-repeat;
-                        background-position: 0 -20%;
-                        background-size: 70% 70%;
+                .imgLoadTitle {
+                    font-size: 0.9rem;
+                    color: var(--white);
+
+                    &>span {
+                        color: var(--gray);
                     }
                 }
 
-            }
+                .imgLoadZone {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
 
-            svg {
-                position: absolute;
-                top: 0;
-                left: 0;
+                    .imgZone {
+                        width: 90px;
+                        overflow: hidden;
 
-                path {
-                    fill: var(--white);
+                        .inputImg {
+                            display: flex;
+                            outline: none;
+                            height: 80px;
+                            border-radius: 15px;
+                            background-color: var(--dark);
+                            color: transparent;
+                            font-size: 0px;
+
+                            &::file-selector-button {
+                                background-color: var(--dark);
+                                width: 90px;
+                                height: 80px;
+                                border: none;
+                                color: transparent;
+                                background: url("/image.svg");
+                                background-repeat: no-repeat;
+                                background-position: 0 -20%;
+                                background-size: 70% 70%;
+                            }
+                        }
+
+                    }
+
+                    img {
+                        width: 80px;
+                        height: 80px;
+                        object-fit: cover;
+                        background-position: center;
+                        border-top-right-radius: 15px;
+                        border-bottom-right-radius: 15px;
+                        border: 2px solid var(--dark);
+                    }
+
+                    img[src=""] {
+                        display: none;
+                    }
+
+                    img:not([src=""])~.logoChar {
+                        display: none;
+                    }
+
+                    .logoChar {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: var(--lightDark);
+                        color: var(--white);
+                        font-size: 2.5rem;
+                        width: 80px;
+                        height: 80px;
+                        border-top-right-radius: 15px;
+                        border-bottom-right-radius: 15px;
+                        border: 2px solid var(--dark);
+
+                    }
+
                 }
+
+                svg {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+
+                    path {
+                        fill: var(--white);
+                    }
+                }
+
+
             }
+
 
 
         }
@@ -123,7 +172,8 @@
 
         .navigator {
             width: 260px;
-            height: 100px;
+            margin-top: 20px;
+
 
             .entry {
                 color: var(--white);
