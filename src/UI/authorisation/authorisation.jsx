@@ -1,34 +1,59 @@
 import React, { useRef, useState } from 'react'
+
+
 import style from './authorisation.module.scss'
 
 
 
 const Authorisation = (prop) => {
-	const [paramRequest, setParamRequest] = useState({ "id": 0 })
+	const [paramRequest, setParamRequest] = useState({ 
+		"id": 0,
+		'first_name': '',
+		'last_name': '',
+		'password': '',
+		'image': '',
+		'nikName': ''
+	 })
 
 	const form = useRef()
 
-	const nameParam = {
-		0: ['first_name', 'last_name', 'password'],
-		1: ['nikName', 'image'],
-		2: ['nikName', 'password']
-	}
+	// const nameParam = {
+	// 	0: ['first_name', 'last_name', 'password'],
+	// 	1: ['nikName', 'image'],
+	// 	2: ['nikName', 'password']
+	// }
+
 
 
 	const getParam = (index) => {
 		let a = {}
-		nameParam[index].forEach(el => {
-			a[el] = form.current[el].value
-			if (form.current[el].type == 'file')  a.logo =  form.current[el].files[0]
+		let state = true
+		form.current.querySelectorAll('input').forEach(input => {
+			if (input.value) {
+				if (input.name == 'image') a[input.name] = input.files[0]
+				else a[input.name] = input.value
+			}
+			else if (input.name == 'last_name' || input.name == 'image') input.name == 'last_name' ? a[input.name] = '' : ''
+			else state = false
+
+		})
+
+		if (state) a['id'] = paramRequest.id + 1
+		else state = true
+
+		console.log({
+			...paramRequest,
+			...a
 		});
-		a.id = index + 1
+
 		setParamRequest({
 			...paramRequest,
 			...a
 		})
+
+		fetch('http://localhost:5173/test').then(el=>console.log(el.text()))
 		if (index + 1 >= 2) prop.isLogFun(true)
 	}
-	console.log(paramRequest);
 
 
 	return (
@@ -36,7 +61,7 @@ const Authorisation = (prop) => {
 			<div className={style.authorisationConteiner}>
 				<form method='post' ref={form}>
 					{
-						paramRequest.id == 0 ? <AuthorisationLVL0 /> : paramRequest.id == 1 ? <AuthorisationLVL1 logoChar={(paramRequest.first_name)[0].toUpperCase() + (paramRequest.last_name)[0].toUpperCase()} /> : <Entry />
+						paramRequest.id == 0 ? <AuthorisationLVL0 /> : paramRequest.id == 1 ? <AuthorisationLVL1 logoChar={paramRequest.first_name.charAt() + paramRequest.last_name.charAt()} /> : <Entry />
 					}
 				</form>
 				<button onClick={() => getParam(paramRequest.id)} className={style.createBtn}>{paramRequest.id == 0 ? "Создать" : paramRequest.id == 1 ? "Продолжить" : "Войти"}</button>
@@ -61,11 +86,8 @@ const AuthorisationLVL0 = () => {
 }
 
 
-const AuthorisationLVL1 = ({logoChar}) => {
+const AuthorisationLVL1 = ({ logoChar }) => {
 	const ImgRef = useRef()
-	console.log(logoChar);
-
-
 	const getMeta = (val) => {
 		const url = window.URL
 		ImgRef.current.src = url.createObjectURL(val.target.files[0])
@@ -80,10 +102,10 @@ const AuthorisationLVL1 = ({logoChar}) => {
 				<span className={style.imgLoadTitle}>Фото профиля <span>(необезательно)</span></span>
 				<div className={style.imgLoadZone}>
 					<div className={style.imgZone}>
-						<input className={style.inputImg} onChange={(val) => getMeta(val)} type="file" name="image" accept="image/*"/>
+						<input className={style.inputImg} onChange={(val) => getMeta(val)} type="file" name="image" accept="image/*" />
 					</div>
-					<img src="" alt="ssdfdf" ref={ImgRef}  />
-					<span className={style.logoChar}>{logoChar}</span>
+					<img src="" alt="ssdfdf" ref={ImgRef} />
+					<span className={style.logoChar}>{logoChar.toUpperCase()}</span>
 
 				</div>
 			</div>
