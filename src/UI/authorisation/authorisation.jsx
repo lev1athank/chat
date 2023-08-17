@@ -6,53 +6,67 @@ import style from './authorisation.module.scss'
 
 
 const Authorisation = (prop) => {
-	const [paramRequest, setParamRequest] = useState({ 
-		"id": 0,
+	const [dataAuth, setDataAuth] = useState({id:0, data:{
 		'first_name': '',
 		'last_name': '',
 		'password': '',
 		'image': '',
+		'imageChar': '',
 		'nikName': ''
-	 })
-
+	}})
 	const form = useRef()
 
-	// const nameParam = {
-	// 	0: ['first_name', 'last_name', 'password'],
-	// 	1: ['nikName', 'image'],
-	// 	2: ['nikName', 'password']
-	// }
+	const sendDataUser = async ()=> {
 
+		const lifeCookie = 24 * 60 * 60
 
+		const responsData = await fetch('http://localhost:5051/registration', {
+			method: "POST", 
+			headers: { "Access-Control-Allow-Methods": "POST", 
+			"Access-Control-Request-Headers": "Content-Type", 
+			"Access-Control-Allow-Origin": "*", 
+			'Content-Type': 'application/json;charset=utf-8'
+		},
+			body: JSON.stringify(dataAuth.data)
+		})
+		const {tokens} = await responsData.json()
+		document.cookie = `AccessToken=${tokens.AccessToken}; max-age=${lifeCookie}`
+		document.cookie = `RefreshToken=${tokens.RefreshToken}; max-age=${lifeCookie}`
+	}
 
-	const getParam = (index) => {
-		let a = {}
+	const getParam = () => {
 		let state = true
+		let data = dataAuth.data
 		form.current.querySelectorAll('input').forEach(input => {
 			if (input.value) {
-				if (input.name == 'image') a[input.name] = input.files[0]
-				else a[input.name] = input.value
+				if (input.name == 'image') data[input.name] = input.files[0]
+				else {
+					data[input.name] = input.value
+				}
 			}
-			else if (input.name == 'last_name' || input.name == 'image') input.name == 'last_name' ? a[input.name] = '' : ''
+			else if (input.name == 'last_name' || input.name == 'image') input.name == 'last_name' ? data[input.name] = '' : ''
 			else state = false
 
 		})
-
-		if (state) a['id'] = paramRequest.id + 1
+		
+		if (dataAuth.id == 0) {
+			data.imageChar = data["first_name"].charAt() + data["last_name"].charAt()
+		}
+		
+		if (dataAuth.id + 1 >= 2) sendDataUser()
+		else if(state) setDataAuth(prev => {
+			return {
+				...prev,
+				id:prev.id+1,
+				data: {
+					...data
+				}
+			}
+		})
 		else state = true
 
-		console.log({
-			...paramRequest,
-			...a
-		});
 
-		setParamRequest({
-			...paramRequest,
-			...a
-		})
 
-		fetch('http://localhost:5173/test').then(el=>console.log(el.text()))
-		if (index + 1 >= 2) prop.isLogFun(true)
 	}
 
 
@@ -61,12 +75,12 @@ const Authorisation = (prop) => {
 			<div className={style.authorisationConteiner}>
 				<form method='post' ref={form}>
 					{
-						paramRequest.id == 0 ? <AuthorisationLVL0 /> : paramRequest.id == 1 ? <AuthorisationLVL1 logoChar={paramRequest.first_name.charAt() + paramRequest.last_name.charAt()} /> : <Entry />
+						dataAuth.id == 0 ? <AuthorisationLVL0 /> : dataAuth.id == 1 ? <AuthorisationLVL1 logoChar={dataAuth.data.imageChar} /> : <Entry />
 					}
 				</form>
-				<button onClick={() => getParam(paramRequest.id)} className={style.createBtn}>{paramRequest.id == 0 ? "Создать" : paramRequest.id == 1 ? "Продолжить" : "Войти"}</button>
+				<button onClick={getParam} className={style.createBtn}>{dataAuth.id == 0 ? "Создать" : dataAuth.id == 1 ? "Продолжить" : "Войти"}</button>
 				<div className={style.navigator}>
-					<span className={style.entry}>{paramRequest.id < 2 ? "если есть аккаунт" : "если нет аккаунта"} <span onClick={() => setParamRequest({ "id": paramRequest.id < 2 ? 2 : 0 })} >{paramRequest.id < 2 ? "войти" : "создать"}</span> </span>
+					<span className={style.entry}>{dataAuth.id < 2 ? "если есть аккаунт" : "если нет аккаунта"} <span onClick={() => setLevelAuth( dataAuth.id < 2 ? 2 : 0 )} >{dataAuth.id < 2 ? "войти" : "создать"}</span> </span>
 				</div>
 			</div>
 		</div>
