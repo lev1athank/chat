@@ -6,32 +6,34 @@ import style from './authorisation.module.scss'
 
 
 const Authorisation = (prop) => {
-	const [dataAuth, setDataAuth] = useState({id:0, data:{
-		'first_name': '',
-		'last_name': '',
-		'password': '',
-		'image': '',
-		'imageChar': '',
-		'nikName': ''
-	}})
+	const [dataAuth, setDataAuth] = useState({
+		id: 0, data: {
+			'first_name': '',
+			'last_name': '',
+			'password': '',
+			'image': '',
+			'imageChar': '',
+			'nikName': ''
+		}
+	})
 	const form = useRef()
 
-	const sendDataUser = async ()=> {
+	const sendDataUser = async () => {
 
-		const lifeCookie = 24 * 60 * 60
-
-		const responsData = await fetch('http://localhost:5051/registration', {
-			method: "POST", 
-			headers: { "Access-Control-Allow-Methods": "POST", 
-			"Access-Control-Request-Headers": "Content-Type", 
-			"Access-Control-Allow-Origin": "*", 
-			'Content-Type': 'application/json;charset=utf-8'
-		},
+		const responsData = await fetch(`http://localhost:5051/${dataAuth.id < 2 ? 'registration' : 'login'}`, {
+			credentials: 'include',
+			method: "POST",
+			headers: {
+				"Access-Control-Allow-Methods": "POST",
+				"Access-Control-Request-Headers": "Content-Type",
+				"Access-Control-Allow-Origin": "*",
+				'Content-Type': 'application/json;charset=utf-8'
+			},
 			body: JSON.stringify(dataAuth.data)
 		})
-		const {tokens} = await responsData.json()
-		document.cookie = `AccessToken=${tokens.AccessToken}; max-age=${lifeCookie}`
-		document.cookie = `RefreshToken=${tokens.RefreshToken}; max-age=${lifeCookie}`
+		const varifyEntry = await responsData.json()
+		if(varifyEntry) prop.isLogFun(true)
+
 	}
 
 	const getParam = () => {
@@ -48,16 +50,16 @@ const Authorisation = (prop) => {
 			else state = false
 
 		})
-		
+
 		if (dataAuth.id == 0) {
 			data.imageChar = data["first_name"].charAt() + data["last_name"].charAt()
 		}
-		
+
 		if (dataAuth.id + 1 >= 2) sendDataUser()
-		else if(state) setDataAuth(prev => {
+		else if (state) setDataAuth(prev => {
 			return {
 				...prev,
-				id:prev.id+1,
+				id: prev.id + 1,
 				data: {
 					...data
 				}
@@ -80,7 +82,7 @@ const Authorisation = (prop) => {
 				</form>
 				<button onClick={getParam} className={style.createBtn}>{dataAuth.id == 0 ? "Создать" : dataAuth.id == 1 ? "Продолжить" : "Войти"}</button>
 				<div className={style.navigator}>
-					<span className={style.entry}>{dataAuth.id < 2 ? "если есть аккаунт" : "если нет аккаунта"} <span onClick={() => setLevelAuth( dataAuth.id < 2 ? 2 : 0 )} >{dataAuth.id < 2 ? "войти" : "создать"}</span> </span>
+					<span className={style.entry}>{dataAuth.id < 2 ? "если есть аккаунт" : "если нет аккаунта"} <span onClick={() => setDataAuth(prev => { return { ...prev, id: prev.id < 2 ? 2 : 0 } })} >{dataAuth.id < 2 ? "войти" : "создать"}</span> </span>
 				</div>
 			</div>
 		</div>
