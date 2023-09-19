@@ -1,21 +1,28 @@
-.chat_zone {
+.chat_main {
     width: 100%;
     height: 100vh;
     background-color: var(--lightDark);
     display: flex;
     align-items: center;
-    justify-content: center;
 
-    .chat {
+    .chat_zone {
+        width: 100%;
+        height: 100vh;
         display: flex;
-        flex-direction: column;
         align-items: center;
-        justify-content: space-between;
-        position: relative;
-        width: 60%;
-        min-width:700px;
-        height: 96vh;
-        background-color: var(--dark);
-        border-radius: 15px;
+        justify-content: center;
+
+        .chat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            width: 60%;
+            min-width:700px;
+            height: 96vh;
+            background-color: var(--dark);
+            border-radius: 15px;
+        }
     }
 }

@@ -1,44 +1,37 @@
-import Contacts from './UI/contacts/contacts'
 import Chat from './UI/chat/chat'
-import Authorisation from './UI/authorisation/authorisation'
-import { useState } from 'react'
-// import Setting from './UI/setting/setting'
+import Authorisation from './page/authorisation/authorisation'
+import { useNavigate, Routes, Route } from 'react-router-dom';
+import Dissemination from './page/dissemination/dissemination';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { checkAuth } from './store/authorizedAccess/authorizedAccess';
 
-const connectAcc = async () => {
-    const AccessToken = document.cookie.split("; ")[0].split("=")[1]
-
-    const responsData = await fetch(`http://localhost:5051/${dataAuth.id < 2 ? 'registration' : 'login'}`, {
-			credentials: 'include',
-			method: "POST",
-			headers: {
-				"Access-Control-Allow-Methods": "POST",
-				"Access-Control-Request-Headers": "Content-Type",
-				"Access-Control-Allow-Origin": "*",
-				"Content-Type": "application/json;charset=utf-8",
-                "authorization": window.Cookies
-			}
-		})
-}
 
 
 const content = () => {
-    const [isLog, setIsLog] = useState(false)
-    console.log(window.Cookies);
+    const navigate = useNavigate();
+    const { authAccesSlice } = useSelector(state => state)
+    const dispatch = useDispatch()
 
+    useEffect(() => {
+        dispatch(checkAuth())
+    }, [])
+
+    useEffect(() => {
+        if (authAccesSlice.IsAuth)
+            navigate("/chat");
+        else
+            navigate("/authorisation");
+
+    }, [authAccesSlice.IsAuth])
 
     return (
-        <>
-            {
-                isLog ?
-                    <>
-                        <Contacts />
-                        <Chat />
-                    </>
-                    :
-                    <Authorisation isLogFun={setIsLog}/>
-            }
+        <Routes>
+            <Route path="/" element={<Dissemination />} />
+            <Route path="/authorisation" element={<Authorisation />} />
+            <Route path="/chat" element={<Chat />} />
+        </Routes>
 
-        </>
     )
 }
 

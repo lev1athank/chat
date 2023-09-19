@@ -2,10 +2,14 @@ import React, { useRef, useState } from 'react'
 
 
 import style from './authorisation.module.scss'
+import { useDispatch } from 'react-redux'
+import { actions } from './../../store/authorizedAccess/authorizedAccess'
 
 
 
-const Authorisation = (prop) => {
+const Authorisation = () => {
+	const dispatch = useDispatch()
+
 	const [dataAuth, setDataAuth] = useState({
 		id: 0, data: {
 			'first_name': '',
@@ -31,8 +35,8 @@ const Authorisation = (prop) => {
 			},
 			body: JSON.stringify(dataAuth.data)
 		})
-		const varifyEntry = await responsData.json()
-		if(varifyEntry) prop.isLogFun(true)
+
+		if (responsData.status == 200) dispatch(actions.connect(true))
 
 	}
 
